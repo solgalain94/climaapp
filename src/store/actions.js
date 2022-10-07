@@ -16,7 +16,6 @@ export const cincoDias = async ({ commit }, datos) => {
     try {
 
         const { data } = await climaApi.get(`/data/2.5/onecall?lat=${datos.lat}&lon=${datos.lon}&exclude=current,minutely,hourly`)
-        console.log(data)
         commit('dias', data.daily)
         commit('clima', data.daily[0])
 

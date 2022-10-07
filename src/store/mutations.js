@@ -4,7 +4,6 @@ export const clima = (state, data) => {
     state.humedad = data.humidity
     state.descripcion = data.weather[0].description
     state.icon = data.weather[0].icon 
-    state.ciudad = data.name
     state.dia = data.dt
 }
 

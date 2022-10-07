@@ -30,9 +30,9 @@
     </div>
     <!-- resultado -->
     <section v-if="resultado && !loading">
-      <div class="max-w-lg p-8 mx-auto rounded-2xl mt-8 text-gray-900 bg-gray-300 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)]">
+      <div class="max-w-lg p-8 mx-auto rounded-2xl mt-8 text-gray-900  shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)]">
         <div class="text-center items-center content-center">
-          <h2 class="text-4xl font-semibold capitalize">{{city}}</h2>
+          <h2 class="text-4xl font-semibold capitalize">{{ciudad_aux}}</h2>
           <div class="font-bold capitalize">{{ formatDate(dia) }}</div>
           <img :src="'http://openweathermap.org/img/wn/' + icon + '@2x.png'" class="mx-auto">
           <div class="mb-2 text-4xl font-semibold"> {{temp_max}}°
@@ -44,7 +44,7 @@
       </div>
       <div class="max-w-lg mx-auto rounded-lg mt-2 text-gray-900">
         <div class="container grid grid-cols-5 gap-1 mx-auto sm:grid-cols-2 xl:grid-cols-5 capitalize">
-          <div v-for="dia in pronostico" :key="dia.dt" @click="onSelect(dia)" class="cursor-pointer flex p-4 bg-gray-200 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)] space-x-4 rounded-xl md:space-x-6  text-gray-900">
+          <div v-for="dia in pronostico" :key="dia.dt" @click="onSelect(dia)" class="cursor-pointer flex p-4 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)] space-x-4 rounded-xl md:space-x-6  text-gray-900">
             <div class="grid grid-rows-2 text-center">
               <div class="font-bold">{{ formatDate(dia.dt) }}</div>
               <img :src="'http://openweathermap.org/img/w/' + dia.weather[0].icon + '.png'" class="mx-auto mt-0">
@@ -56,7 +56,7 @@
     </section>
 
     <!-- no hay datos -->
-    <div v-if="!resultado && !loading" class="max-w-lg p-8 mx-auto rounded-2xl mt-8 bg-gray-300 text-gray-900 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)] justify-center">
+    <div v-if="!resultado && !loading" class="max-w-lg p-8 mx-auto rounded-2xl mt-8  text-gray-900 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)] justify-center">
       <div class="flex md:justify-end -mt-16">
         <img class="w-15 h-16 object-fit rounded-md" src="../assets/clima.png" />
       </div>
@@ -80,12 +80,14 @@ export default {
 
     const resultado = ref(false)
     const ciudad = ref("")
+    let ciudad_aux = ref("")
     
     const store = useStore()
     const { coordenadas, clima, cincoDias, loading } = useClima()
     
     return{
       ciudad,
+      ciudad_aux,
       coordenadas,
       loading,
       resultado,
@@ -94,7 +96,7 @@ export default {
         return day.toLocaleString("es", { weekday: "short" }); 
       },
       onSearch: async() => {
-
+        ciudad_aux.value = ciudad.value
         const code = await clima(ciudad.value);
         const datos = await coordenadas(ciudad.value);
         const resp = await cincoDias(datos)
@@ -107,7 +109,6 @@ export default {
         store.commit("clima", dia);
       },
       pronostico: computed(() => store.getters["pronostico"]),
-      city: computed(() => store.getters["ciudad"]),
       dia: computed(() => store.getters["dia"]), 
       descripcion: computed(() => store.getters["descripcion"]),
       humedad: computed(() => store.getters["humedad"]),

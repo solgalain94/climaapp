@@ -4,5 +4,5 @@ export default () => ({
    temp_min: "",
    humedad: "",
    descripcion: "",
-   icon: ""
+   icon: "",
 })

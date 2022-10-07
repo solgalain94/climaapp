@@ -16,9 +16,6 @@ export const icon = (state) => {
 export const pronostico = (state) => {
     return state.pronostico
 }
-export const ciudad = (state) => {
-    return state.ciudad
-}
 export const dia = (state) => {
     return state.dia
 }
