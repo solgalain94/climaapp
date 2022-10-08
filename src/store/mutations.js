@@ -10,3 +10,8 @@ export const clima = (state, data) => {
 export const dias = (state, data) => {
     state.pronostico = data.slice(1, 6)
 }
+
+export const coordenadas = (state, data) => {
+    state.lon = data.lon
+    state.lat = data.lat
+}

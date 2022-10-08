@@ -2,8 +2,8 @@
 <section class="text-gray-800 body-font mt-6">
   <div class="container mx-auto mt-6 p-1">
     <!-- buscador -->
-    <section class="max-w-lg mx-auto mt-8 rounded-3xl bg-gray-300 text-gray-900">
-        <div class="rounded flex flex-col md:flex-row items-center w-3/6 p-2 space-y-1 md:space-y-0">
+    <section class="max-w-lg mx-auto mt-8 rounded-3xl bg-gray-300 text-gray-900 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)]">
+        <div class="rounded flex flex-col md:flex-row items-center w-3/6 p-2 space-y-1 md:space-y-0 ">
           <div class="hidden md:block p-1 outline-none focus:outline-none">
             <svg class="w-5 h-5"
               fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor"
@@ -30,6 +30,7 @@
     </div>
     <!-- resultado -->
     <section v-if="resultado && !loading">
+      <!-- datos actuales -->
       <div class="max-w-lg p-8 mx-auto rounded-2xl mt-8 text-gray-900  shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)]">
         <div class="text-center items-center content-center">
           <h2 class="text-4xl font-semibold capitalize">{{ciudad_aux}}</h2>
@@ -42,21 +43,23 @@
           <p class="text-gray-900 capitalize text-lg italic">{{humedad}}% humedad</p>
         </div>
       </div>
+      <!-- pronostico -->
       <div class="max-w-lg mx-auto rounded-lg mt-2 text-gray-900">
-        <div class="container grid grid-cols-5 gap-1 mx-auto sm:grid-cols-2 xl:grid-cols-5 capitalize">
-          <div v-for="dia in pronostico" :key="dia.dt" @click="onSelect(dia)" class="cursor-pointer flex p-4 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)] space-x-4 rounded-xl md:space-x-6  text-gray-900">
+        <div class="container grid grid-cols-5 gap-2 mx-auto xl:grid-cols-5 capitalize">
+          <div v-for="dia in pronostico" :key="dia.dt" @click="onSelect(dia)" class="cursor-pointer bg-purple-300 flex p-4 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)] space-x-4 rounded-xl md:space-x-6  text-gray-900">
             <div class="grid grid-rows-2 text-center">
               <div class="font-bold">{{ formatDate(dia.dt) }}</div>
-              <img :src="'http://openweathermap.org/img/w/' + dia.weather[0].icon + '.png'" class="mx-auto mt-0">
+              <div class="mt-1 text-sm font-bold"> {{formatTemp(dia.temp.max)}}°
+                / {{formatTemp(dia.temp.min)}}°
+              </div>
             </div>
           </div>
         </div>
       </div>
-      
     </section>
 
     <!-- no hay datos -->
-    <div v-if="!resultado && !loading" class="max-w-lg p-8 mx-auto rounded-2xl mt-8  text-gray-900 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)] justify-center">
+    <div v-if="!resultado && !loading" class="max-w-lg p-8 mx-auto rounded-2xl mt-8 text-gray-900 shadow-[0px_22px_70px_4px_rgba(0,0,0,0.56)] justify-center">
       <div class="flex md:justify-end -mt-16">
         <img class="w-15 h-16 object-fit rounded-md" src="../assets/clima.png" />
       </div>
@@ -81,6 +84,7 @@ export default {
     const resultado = ref(false)
     const ciudad = ref("")
     let ciudad_aux = ref("")
+    let fecha = ref(null)
     
     const store = useStore()
     const { coordenadas, clima, cincoDias, loading } = useClima()
@@ -88,20 +92,24 @@ export default {
     return{
       ciudad,
       ciudad_aux,
-      coordenadas,
+      fecha,
       loading,
       resultado,
       formatDate: (dt) => {
         const day = new Date(dt * 1000)
+        const prueba = new Date(1665186903 * 1000)
         return day.toLocaleString("es", { weekday: "short" }); 
+      },
+      formatTemp: (temp) =>{
+        return Math.round(temp)
       },
       onSearch: async() => {
         ciudad_aux.value = ciudad.value
-        const code = await clima(ciudad.value);
+        const { cod } = await clima(ciudad.value);
         const datos = await coordenadas(ciudad.value);
         const resp = await cincoDias(datos)
 
-        if(code == 200){
+        if(cod == 200){
           resultado.value = true
         }
       },

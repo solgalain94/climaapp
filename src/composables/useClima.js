@@ -14,16 +14,26 @@ const useClima = () => {
     const clima = async(ciudad) => {
         loading.value = true
 
-        const {cod } = await store.dispatch('clima', ciudad)
+        const resp = await store.dispatch('clima', ciudad)
 
         setTimeout(() => (loading.value = false), 2000);
 
-        return cod
+        return resp
     }
     const cincoDias = async(datos) => {
         const resp = await store.dispatch('cincoDias', datos)
         return resp
     }
+
+    // const cambiarDia = async (dt, lat, lon) => {
+    //     const datos = {
+    //         dt,
+    //         lat,
+    //         lon
+    //     }
+    //     const resp = await store.dispatch('cambiarDia', datos)
+    //     return resp
+    // }
 
     return {
         cincoDias,

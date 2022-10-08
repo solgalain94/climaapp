@@ -19,3 +19,9 @@ export const pronostico = (state) => {
 export const dia = (state) => {
     return state.dia
 }
+export const lat = (state) => {
+    return state.lat
+}
+export const lon = (state) => {
+    return state.lon
+}
